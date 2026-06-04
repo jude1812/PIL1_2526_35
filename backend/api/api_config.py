@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Tue May 26 09:05:03 2026
-
-@author: hounsousamuel
-"""
 
 import os
 IP = "0.0.0.0"
@@ -15,7 +10,6 @@ LIMITE = 10
 ALLOWED_ORIGINS = ["*"]
 NOT_BEFORE = 0.1
 EXP = 60 * 3
-MAX_CONFIG_SIZE = 20 * 1024  # 20KB
 STATICDIR = "."
 BUILD_DIR = "."
 INDEX_FILE = "."
