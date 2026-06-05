@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+Created on Tue Jun  2 08:23:56 2026
+
+@author: hounsousamuel
+"""
 
 import os, sys
 sys.path.insert(1, os.path.dirname(os.path.abspath(os.path.join(__file__, "..", ".."))))
@@ -144,10 +149,10 @@ async def catch_all(full_path: str):
         raise HTTPException(404, detail="Route non trouvée")
         
     if full_path.startswith("static/"):
-        return FileResponse(os.path.join(STATICDIR, full_path))
+        return FileResponse(os.path.join(STATICDIR, full_path.removeprefix("static/")))
     
     elif full_path.startswith("build/"):
-        return FileResponse(os.path.join(BUILD_DIR, full_path))
+        return FileResponse(os.path.join(BUILD_DIR, full_path.removeprefix("build/")))
     
     elif REACT_EXISTS:
         return FileResponse(INDEX_FILE)
