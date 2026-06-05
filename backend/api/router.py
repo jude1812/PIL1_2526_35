@@ -13,7 +13,8 @@ import diskcache
 from fastapi import (
     status, Request, WebSocket, 
     APIRouter, HTTPException, File,
-    UploadFile, Form, WebSocketException
+    UploadFile, Form, WebSocketException,
+    WebSocketDisconnect
 )
 from pydantic import BaseModel
 from backend.api.api_config import LIMITE
@@ -296,18 +297,40 @@ class GetMessageData(BaseModel):
     token: str
     key: str
 
-class UpdateUserData(BaseModel):
-    nom: str
-    prenom: str
-    phone: str
+class UpdateEmailData(BaseModel):
+    phone: str  
+    email: str  
     password: str
-    email: str
-    filiere: str
-    level: str
-    bio: str
+    token: str
+    key: str
+
+class UpdatePhoneData(BaseModel):
+    email: str  
+    phone: str  
+    password: str
+    token: str
+    key: str
+
+class UpdateUserData(BaseModel):
+    email: str | None = None
+    phone: str | None = None
+    nom: str | None = None
+    prenom: str | None = None
+    bio: str | None = None
+    filiere: str | None = None
+    level: str | None = None
+    password: str
     token: str
     key: str
     
+class DeleteResponseData(BaseModel):
+    phone: str
+    email: str
+    password: str
+    response_id: int
+    token: str
+    key: str
+        
 # =============================================================================
 # Routes API        
 # =============================================================================
@@ -1243,44 +1266,168 @@ async def _users_me(request: Request, data: GlobalData):
             detail=f"Erreur interne: {str(e)}"
         )
 
-@router.post("/users/update")
+# =============================================================================
+# UPDATE
+# =============================================================================
+
+@router.post("/users/update/email")
 @limiter.limit(f"{LIMITE}/minute")
-async def _update_user(request: Request, data: UpdateUserData):
+async def update_email(request: Request, data: UpdateEmailData):
     """
-    Endpoint pour mettre à jour les informations du profil utilisateur.
-
-    Parameters
-    ----------
-    request : Request
-        La requête HTTP.
-    data : UpdateUserData
-        Les données contenant nom, prenom, filiere, level, bio, token, key, etc.
-
-    Returns
-    -------
-    dict
-        Dictionnaire contenant success (bool).
+    Endpoint pour modifier uniquement l'email.
+    Utilise le téléphone comme identifiant.
     """
     try:
         db_manager = get_db_manager()
-        identifier, user = _verify_token_and_user(data, db_manager)
-        data_dict = data.model_dump(exclude={"token", "key", "password"})
-        for attr, value in data_dict.items():
-            if value and hasattr(user, attr):
-                setattr(user, attr, value)
-                
+        verify_token(token=data.token, key=data.key)
+        if not data.phone:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="PHONE REQUIRED"
+            )
+        
+        user = db_manager.get_user_by_email_or_phone(data.phone)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="ACCOUNT DONT EXISTS"
+            )
+        
+        if not checkpw(data.password, user.password_hash.encode()):
+            raise HTTPException(
+                detail="BAD_PASSWORD",
+                status_code=status.HTTP_401_UNAUTHORIZED,
+            )
+        
+        if not db_manager.verify_email_validity(data.email):
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="EMAIL ALREADY EXISTS"
+            )
+        
+        user.email = data.email
         user = db_manager.create_user(user)
+        
         return {
             "success": user is not None,
+            "email": user.email if user else None
         }
+        
     except HTTPException:
         raise
-    
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Erreur interne: {str(e)}"
         )
+
+
+@router.post("/users/update/phone")
+@limiter.limit(f"{LIMITE}/minute")
+async def update_phone(request: Request, data: UpdatePhoneData):
+    """
+    Endpoint pour modifier uniquement le téléphone.
+    Utilise l'email comme identifiant.
+    """
+    try:
+        db_manager = get_db_manager()
+        verify_token(token=data.token, key=data.key)
+        if not data.email:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="EMAIL REQUIRED"
+            )
+        
+        user = db_manager.get_user_by_email_or_phone(data.email)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="ACCOUNT DONT EXISTS"
+            )
+
+        if not checkpw(data.password, user.password_hash.encode()):
+            raise HTTPException(
+                detail="BAD_PASSWORD",
+                status_code=status.HTTP_401_UNAUTHORIZED,
+            )
+        
+        if not db_manager.verify_phone_validity(data.phone):
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="PHONE ALREADY EXISTS"
+            )
+        
+        user.phone = data.phone
+        user = db_manager.create_user(user)
+        
+        return {
+            "success": user is not None,
+            "phone": user.phone if user else None
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erreur interne: {str(e)}"
+        )
+
+
+@router.post("/users/update/general")
+@limiter.limit(f"{LIMITE}/minute")
+async def update_general(request: Request, data: UpdateUserData):
+    """
+    Endpoint pour modifier les autres champs (nom, prenom, bio, filiere, level).
+    Utilise l'email OU le téléphone comme identifiant.
+    """
+    try:
+        db_manager = get_db_manager()
+        verify_token(token=data.token, key=data.key)
+        
+        identifier = data.email or data.phone
+        if not identifier:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="IDENTIFIER NOT AVAILABLE"
+            )
+        
+        user = db_manager.get_user_by_email_or_phone(identifier)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="ACCOUNT DONT EXISTS"
+            )
+        if not checkpw(data.password, user.password_hash.encode()):
+            raise HTTPException(
+                detail="BAD_PASSWORD",
+                status_code=status.HTTP_401_UNAUTHORIZED,
+            )
+        
+        if data.nom is not None:
+            user.nom = data.nom
+        if data.prenom is not None:
+            user.prenom = data.prenom
+        if data.bio is not None:
+            user.bio = data.bio
+        if data.filiere is not None:
+            user.filiere = data.filiere
+        if data.level is not None:
+            user.level = data.level
+        
+        user = db_manager.create_user(user)
+        
+        return {
+            "success": user is not None
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erreur interne: {str(e)}"
+        )        
         
 # =============================================================================
 # MATCHING
@@ -1472,6 +1619,29 @@ async def get_active_offres(request: Request):
         "offres": [db_manager.to_dict(offre) for offre in offres]
     }
 
+@router.get("/offres/all")
+@limiter.limit(f"{LIMITE}/minute")
+async def get_all_offres(request: Request):
+    """
+    Endpoint pour récupérer toutes les offres actives (pour filtrage frontend).
+
+    Parameters
+    ----------
+    request : Request
+        La requête HTTP.
+
+    Returns
+    -------
+    dict
+        Dictionnaire contenant success et la liste des offres actives.
+    """
+    db_manager = get_db_manager()
+    offres = db_manager.get_all_offres()  
+    return {
+        "success": True,
+        "offres": [db_manager.to_dict(offre) for offre in offres]
+    }
+
 @router.get("/offres/search")
 @limiter.limit(f"{LIMITE}/minute")
 async def search_offres(
@@ -1564,6 +1734,22 @@ async def _response_to_user_offre(request: Request, data: OffreResponseData):
             detail=f"Erreur interne: {str(e)}"
         )
 
+@router.post("/users/delete_response")
+@limiter.limit(f"{LIMITE}/minute")
+async def _delete_response(request: Request, data: DeleteResponseData):
+    try:
+        db_manager = get_db_manager()
+        identifier, user = _verify_token_and_user(data, db_manager)
+        result = db_manager.remove_response(data.response_id)
+        return {**result}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erreur interne: {str(e)}"
+        )
+        
 @router.post("/users/answer_to_response")
 @limiter.limit(f"{LIMITE}/minute")
 async def _answer_to_user_response(request: Request, data: AnswerResponseData):
@@ -1621,7 +1807,6 @@ async def _answer_to_user_response(request: Request, data: AnswerResponseData):
 # MESSAGES
 # =============================================================================
 @router.post("/users/messages")
-@limiter.limit(f"{LIMITE}/minute")
 async def _get_user_messages(request: Request, data: GetMessageData):
     """
     Endpoint pour récupérer la conversation entre deux utilisateurs.
@@ -1643,7 +1828,7 @@ async def _get_user_messages(request: Request, data: GetMessageData):
         data_copy = data.copy()
         data_copy.email = data.sender_email
         data.phone = data.sender_phone
-        identifier, user = _verify_token_and_user(data_copy, db_manager)  
+        identifier, user = _verify_token_and_user(data_copy, db_manager, checkpassword=False)  
         
         data_copy = data.copy()
         data_copy.email = data.receiver_email
@@ -1664,7 +1849,6 @@ async def _get_user_messages(request: Request, data: GetMessageData):
         )
 
 @router.post("/users/messages_unread_count")
-@limiter.limit(f"{LIMITE}/minute")
 async def _get_user_message_unread_count(request: Request, data: GetMessageData):
     """
     Endpoint pour compter les messages non lus entre deux utilisateurs.
@@ -1706,7 +1890,6 @@ async def _get_user_message_unread_count(request: Request, data: GetMessageData)
         )
 
 @router.post("/users/messages_make_read")
-@limiter.limit(f"{LIMITE}/minute")
 async def _make_user_message_read(request: Request, data: GetMessageData):
     """
     Endpoint pour marquer comme lus tous les messages d'une conversation.
@@ -1728,7 +1911,7 @@ async def _make_user_message_read(request: Request, data: GetMessageData):
         data_copy = data.copy()
         data_copy.email = data.sender_email
         data.phone = data.sender_phone
-        identifier, user = _verify_token_and_user(data_copy, db_manager)  
+        identifier, user = _verify_token_and_user(data_copy, db_manager, checkpassword=False)  
         
         data_copy = data.copy()
         data_copy.email = data.receiver_email
@@ -1750,7 +1933,6 @@ async def _make_user_message_read(request: Request, data: GetMessageData):
         )
 
 @router.post("/users/messages_user_with_me")
-@limiter.limit(f"{LIMITE}/minute")
 async def _get_user_that_user_write(request: Request, data: GlobalData):
     """
     Endpoint pour récupérer la liste des utilisateurs avec qui on a échangé.
@@ -1769,7 +1951,7 @@ async def _get_user_that_user_write(request: Request, data: GlobalData):
     """
     try:
         db_manager = get_db_manager()
-        identifier, user = _verify_token_and_user(data, db_manager)    
+        identifier, user = _verify_token_and_user(data, db_manager, checkpassword=False)    
         users_ids = db_manager.get_conversations_ids_list(identifier)
         if not users_ids:
             return {
@@ -1803,7 +1985,7 @@ async def _get_user_that_user_write(request: Request, data: GlobalData):
 # WS MESSAGERIE
 # =============================================================================
 @router.websocket("/user/ws/msg")
-async def _ws_user(request: Request, ws: WebSocket, username: str, user_session_id: str):
+async def _ws_user(ws: WebSocket, username: str, user_session_id: str):
     """
     Endpoint WebSocket pour la messagerie instantanée.
     
@@ -1829,11 +2011,11 @@ async def _ws_user(request: Request, ws: WebSocket, username: str, user_session_
     db_manager = get_db_manager()
     # username est gérer par le frontend, pour nom = XX, prenom = ss ee, username = XX_ss_ee
     try:
-        if not user_session_id in CONNECTED_USERS:
-            raise WebSocketException(
-                code=status.WS_1008_POLICY_VIOLATION,
-                reason="USER_SESSION_ID NOT REGISTER"
-            )
+        # if not user_session_id in CONNECTED_USERS:
+        #     raise WebSocketException(
+        #         code=status.WS_1008_POLICY_VIOLATION,
+        #         reason="USER_SESSION_ID NOT REGISTER"
+        #     )
         await ws.accept()
         ws_manager.connect(ws, username)
         while True:
@@ -1877,16 +2059,79 @@ async def _ws_user(request: Request, ws: WebSocket, username: str, user_session_
                     reason="INVALIDE_DATA_STRUCTURE"
                 )
                     
-                        
-    except (HTTPException, WebSocketException):
-        raise
     
+    except WebSocketDisconnect:
+        pass
+    
+    except (WebSocketException,):
+        raise
+
     except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Erreur interne: {str(e)}"
-        )
+        print(f"Erreur WS inattendue: {e}")
         
     finally:
-        await ws.close()
-        ws_manager.disconnect(username)
+        try:
+            await ws.close()
+        except:
+            pass
+        
+        try:
+            ws_manager.disconnect(username)
+        except:
+            pass
+        
+# =============================================================================
+# CHECK
+# =============================================================================
+@router.get("/check/email")
+@limiter.limit(f"{LIMITE}/minute")
+async def check_email_exists(request: Request, email: str):
+    """
+    Vérifie si un email est déjà utilisé.
+
+    Parameters
+    ----------
+    request : Request
+        La requête HTTP.
+    email : str
+        L'email à vérifier.
+
+    Returns
+    -------
+    dict
+        {"exists": bool, "message": str}
+    """
+    db_manager = get_db_manager()
+    exists = not db_manager.verify_email_validity(email)
+    return {
+        "exists": exists,
+        "message": "Email déjà utilisé" if exists else "Email disponible",
+        "email": email
+    }
+
+
+@router.get("/check/phone")
+@limiter.limit(f"{LIMITE}/minute")
+async def check_phone_exists(request: Request, phone: str):
+    """
+    Vérifie si un numéro de téléphone est déjà utilisé.
+
+    Parameters
+    ----------
+    request : Request
+        La requête HTTP.
+    phone : str
+        Le téléphone à vérifier.
+
+    Returns
+    -------
+    dict
+        {"exists": bool, "message": str}
+    """
+    db_manager = get_db_manager()
+    exists = not db_manager.verify_phone_validity(phone)
+    return {
+        "exists": exists,
+        "message": "Téléphone déjà utilisé" if exists else "Téléphone disponible",
+        "phone": phone
+    }
