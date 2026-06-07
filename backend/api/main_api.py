@@ -106,7 +106,8 @@ async def serve_react_app():
 def start(app, host: str = "0.0.0.0", port: int = 8000):
     """Démarre le serveur dans un thread séparé."""
     global server
-    config = uvicorn.Config(app, host=host, port=port, loop="uvloop", use_colors=True, workers=10)
+    loop = "uvloop" if sys.platform != "win32" else "asyncio"
+    config = uvicorn.Config(app, host=host, port=port, loop=loop, use_colors=True, workers=10)
     server = uvicorn.Server(config=config)
     th = threading.Thread(target=server.run, daemon=True)
     return th, server
