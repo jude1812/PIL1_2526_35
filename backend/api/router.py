@@ -1238,7 +1238,7 @@ async def _users_me(request: Request, data: GlobalData):
         user_data = {
             "skills": [db_manager.to_dict(skill) for skill in user.skills] if user.skills else [],
             "dispos": [db_manager.to_dict(dispo) for dispo in user.disponibilites] if user.disponibilites else [],
-            "user_data": db_manager.to_dict(user, exclude=["skills", "disponibilites", "passphrase_hash", "password_hash"]),
+            "user_data": db_manager.to_dict(user, exclude=["passphrase_hash", "password_hash"]),
             "offres": [db_manager.to_dict(offre) for offre in offres],
             "demandes": [db_manager.to_dict(demande) for demande in demandes],
             "responses": db_manager.get_responses(identifier)
@@ -1250,7 +1250,7 @@ async def _users_me(request: Request, data: GlobalData):
         else:
             matchings = []
             for candidat, score, reasons in matchings_:
-                candidat = db_manager.to_dict(candidat, exclude=["skills", "disponibilites", "passphrase_hash", "password_hash"])
+                candidat = db_manager.to_dict(candidat, exclude=["passphrase_hash", "password_hash"])
                 matchings.append([candidat, score, reasons])
             
             user_data["matchings"] = matchings
