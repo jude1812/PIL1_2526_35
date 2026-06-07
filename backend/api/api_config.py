@@ -9,7 +9,7 @@ IP = "0.0.0.0"
 PORT = 9000
 API_HOST_PUBLIC = "localhost"  
 API_PORT = 9000
-LIMITE = 10
+LIMITE = 50
 ALLOWED_ORIGINS = ["*"]
 NOT_BEFORE = 0.1
 EXP = 60 * 3
@@ -24,9 +24,9 @@ IMG_EXTENSIONS = (".jpg", ".jpeg", ".png", ".ppm", ".bmp", ".pgm", ".tif", ".tif
 FASTAPIDIR = os.path.abspath(os.path.join(BASEDIR, "..", "fastapi_mount", "files"))
 PROFILE_IMG_DIR = os.path.join(FASTAPIDIR, "img_profils")
 WS_UPLOAD_DIR = os.path.join(FASTAPIDIR, "ws_upload_dir")
-DIRS = [FASTAPIDIR, PROFILE_IMG_DIR, WS_UPLOAD_DIR]
+DBPATH = os.path.abspath(os.path.join(BASEDIR, "..", "database"))
+DIRS = [FASTAPIDIR, PROFILE_IMG_DIR, WS_UPLOAD_DIR, DBPATH]
 for path in DIRS:
     os.makedirs(path, exist_ok=True)
 
 REACT_EXISTS = all(os.path.exists(x) for x in (FRONTEND, BUILD_DIR, STATICDIR, INDEX_FILE))
-print(REACT_EXISTS)
