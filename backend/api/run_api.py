@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+Created on Tue May 26 14:00:48 2026
+
+@author: hounsousamuel
+"""
 
 import os, sys
 sys.path.insert(1, os.path.dirname(os.path.abspath(os.path.join(__file__, "..", ".."))))
@@ -33,7 +38,8 @@ def run_api():
         
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)  
-    signal.signal(signal.SIGQUIT, signal_handler)
+    if sys.platform != "win32":
+        signal.signal(signal.SIGQUIT, signal_handler)
     
     print('API lancé à : ', time.ctime())
     start_time = time.time()
