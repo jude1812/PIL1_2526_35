@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+"""
+"""
 
 import os, sys
 import enum
+sys.path.insert(1, os.path.dirname(os.path.abspath(os.path.join(__file__, "..", ".."))))
 from sqlmodel import SQLModel, create_engine, select, Session, func, Field, Relationship, and_, or_
-from dotenv import load_dotenv
 from typing import Optional, List, Dict, Any, Tuple
 from datetime import datetime
+from backend.api.api_config import DBPATH
+
 
 # =============================================================================
 # Les classes de enum
@@ -62,6 +65,10 @@ class ResponseStatut(str, enum.Enum):
 # Les classes (table sql) sqlmodel
 # =============================================================================
 
+def _is_loaded(obj, relation: str) -> bool:
+    """Vérifie si une relation est chargée sans déclencher le lazy load."""
+    return relation in obj.__dict__ and obj.__dict__[relation] is not None
+
 class User(SQLModel, table=True):
     __table_args__ = {"extend_existing": True}
     __tablename__ = "users"
@@ -73,45 +80,44 @@ class User(SQLModel, table=True):
     phone: str = Field(unique=True, index=True, max_length=10)
     bio: Optional[str] = Field(default=None)
     password_hash: str = Field(exclude=True)
-    passphrase_hash : str = Field(exclude=True)
+    passphrase_hash: str = Field(exclude=True)
     passphrase_question: Optional[str] = Field(default=None)
     filiere: Optional[Filiere] = Field(default=None)
     level: Optional[Level] = Field(default=None)
     img_path: Optional[str] = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.now)
-    skills: List["UserSkill"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
-    disponibilites: List["Disponibilite"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
-    offres: List["Offre"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
-    
+    skills: List["UserSkill"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin", "cascade": "all, delete-orphan"})
+    disponibilites: List["Disponibilite"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin", "cascade": "all, delete-orphan"})
+    offres: List["Offre"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin", "cascade": "all, delete-orphan"})
+
     def model_dump(self, skip_relation: str = None, **kwargs) -> Dict[str, Any]:
         data = super().model_dump(**kwargs)
-        
-        if hasattr(self, 'skills') and self.skills and skip_relation != 'skills' and "skills" not in kwargs.get("exclude", []):
+        exclude = kwargs.get("exclude", []) or []
+
+        if skip_relation != 'skills' and "skills" not in exclude and _is_loaded(self, 'skills'):
             data['skills'] = [
-                skill.model_dump(skip_relation='user', **kwargs) 
-                for skill in self.skills
+                skill.model_dump(skip_relation='user', **kwargs)
+                for skill in self.__dict__['skills']
             ]
         else:
             data['skills'] = []
-        
-        if hasattr(self, 'disponibilites') and self.disponibilites and skip_relation != 'disponibilites' and \
-            "disponibilities" not in kwargs.get("exclude", []):
+
+        if skip_relation != 'disponibilites' and "disponibilites" not in exclude and _is_loaded(self, 'disponibilites'):
             data['disponibilites'] = [
-                dispo.model_dump(skip_relation='user', **kwargs) 
-                for dispo in self.disponibilites
+                dispo.model_dump(skip_relation='user', **kwargs)
+                for dispo in self.__dict__['disponibilites']
             ]
         else:
             data['disponibilites'] = []
-        
-        if hasattr(self, 'offres') and self.offres and skip_relation != 'offres' and \
-            "offres" not in kwargs.get("exclude", []):
+
+        if skip_relation != 'offres' and "offres" not in exclude and _is_loaded(self, 'offres'):
             data['offres'] = [
-                offre.model_dump(skip_relation='user', **kwargs) 
-                for offre in self.offres
+                offre.model_dump(skip_relation='user', **kwargs)
+                for offre in self.__dict__['offres']
             ]
         else:
             data['offres'] = []
-        
+
         return data
 
 
@@ -125,14 +131,14 @@ class UserSkill(SQLModel, table=True):
     type: SkillType
     created_at: datetime = Field(default_factory=datetime.now)
     user: Optional[User] = Relationship(back_populates="skills", sa_relationship_kwargs={"lazy": "selectin"})
-    
+
     def model_dump(self, skip_relation: str = None, **kwargs) -> Dict[str, Any]:
         data = super().model_dump(**kwargs)
-        
-        if hasattr(self, 'user') and self.user and skip_relation != 'user' and \
-            "user" not in kwargs.get("exclude", []):
-            data['user'] = self.user.model_dump(skip_relation='skills', **kwargs)
-        
+        exclude = kwargs.get("exclude", []) or []
+
+        if skip_relation != 'user' and "user" not in exclude and _is_loaded(self, 'user'):
+            data['user'] = self.__dict__['user'].model_dump(skip_relation='skills', **kwargs)
+
         return data
 
 
@@ -147,14 +153,14 @@ class Disponibilite(SQLModel, table=True):
     user_id: int = Field(foreign_key="users.id", ondelete="CASCADE")
     created_at: datetime = Field(default_factory=datetime.now)
     user: Optional[User] = Relationship(back_populates="disponibilites", sa_relationship_kwargs={"lazy": "selectin"})
-    
+
     def model_dump(self, skip_relation: str = None, **kwargs) -> Dict[str, Any]:
         data = super().model_dump(**kwargs)
-        
-        if hasattr(self, 'user') and self.user and skip_relation != 'user' and \
-            "user" not in kwargs.get("exclude", []):
-            data['user'] = self.user.model_dump(skip_relation='disponibilites', **kwargs)
-        
+        exclude = kwargs.get("exclude", []) or []
+
+        if skip_relation != 'user' and "user" not in exclude and _is_loaded(self, 'user'):
+            data['user'] = self.__dict__['user'].model_dump(skip_relation='disponibilites', **kwargs)
+
         return data
 
 
@@ -167,28 +173,27 @@ class Offre(SQLModel, table=True):
     competence: str = Field(min_length=1)
     description: Optional[str] = Field(default=None, max_length=500)
     type: OffreType
-    format: OffreFormat 
+    format: OffreFormat
     statut: OffreStatut = Field(default=OffreStatut.active)
     created_at: datetime = Field(default_factory=datetime.now)
     user: Optional[User] = Relationship(back_populates="offres", sa_relationship_kwargs={"lazy": "selectin"})
-    responses: List["OffreResponse"] = Relationship(back_populates="offre", sa_relationship_kwargs={"lazy": "selectin"})
-    
+    responses: List["OffreResponse"] = Relationship(back_populates="offre", sa_relationship_kwargs={"lazy": "selectin", "cascade": "all, delete-orphan"})
+
     def model_dump(self, skip_relation: str = None, **kwargs) -> Dict[str, Any]:
         data = super().model_dump(**kwargs)
-        
-        if hasattr(self, 'user') and self.user and skip_relation != 'user' and \
-            "user" not in kwargs.get("exclude", []):
-            data['user'] = self.user.model_dump(skip_relation='offres', **kwargs)
-        
-        if hasattr(self, 'responses') and self.responses and skip_relation != 'responses' and \
-            "responses" not in kwargs.get("exclude", []):
+        exclude = kwargs.get("exclude", []) or []
+
+        if skip_relation != 'user' and "user" not in exclude and _is_loaded(self, 'user'):
+            data['user'] = self.__dict__['user'].model_dump(skip_relation='offres', **kwargs)
+
+        if skip_relation != 'responses' and "responses" not in exclude and _is_loaded(self, 'responses'):
             data['responses'] = [
-                response.model_dump(skip_relation='offre', **kwargs) 
-                for response in self.responses
+                response.model_dump(skip_relation='offre', **kwargs)
+                for response in self.__dict__['responses']
             ]
         else:
             data['responses'] = []
-        
+
         return data
 
 
@@ -202,16 +207,15 @@ class OffreResponse(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.now)
     statut: ResponseStatut = Field(default=ResponseStatut.in_wait)
     offre: Optional["Offre"] = Relationship(back_populates="responses", sa_relationship_kwargs={"lazy": "selectin"})
-    
+
     def model_dump(self, skip_relation: str = None, **kwargs) -> Dict[str, Any]:
         data = super().model_dump(**kwargs)
-        
-        if hasattr(self, 'offre') and self.offre and skip_relation != 'offre' and \
-            "offre" not in kwargs.get("exclude", []):
-            data['offre'] = self.offre.model_dump(skip_relation='responses', **kwargs)
-        
-        return data
+        exclude = kwargs.get("exclude", []) or []
 
+        if skip_relation != 'offre' and "offre" not in exclude and _is_loaded(self, 'offre'):
+            data['offre'] = self.__dict__['offre'].model_dump(skip_relation='responses', **kwargs)
+
+        return data
 
 class Message(SQLModel, table=True):
     __tablename__ = "messages"
@@ -229,10 +233,8 @@ class Message(SQLModel, table=True):
 class DBManager:
     def __init__(self, db_url: str = None):
         if not db_url:
-            load_dotenv()
-            db_url = os.getenv("MENTOR_LINK_URL")
-            if not db_url:
-                raise ValueError("DB url manquant !")
+            db_url = os.path.join(DBPATH, "mentor_link.db")
+            db_url = "sqlite:///" + db_url
                 
         self.engine = create_engine(db_url, echo=False)
         SQLModel.metadata.create_all(self.engine)
@@ -595,7 +597,7 @@ class DBManager:
             if all:
                 dispos_to_delete = user_dispos
             else:
-                dispos_to_delete = [dispo for dispo in user_dispos if dispo.jour == jour]
+                dispos_to_delete = [dispo for dispo in user_dispos if str(dispo.jour.value) == jour]
                 
             if not dispos_to_delete:
                 result["reason"] = "Pas de disponibilités à supprimer, veuillez revoir votre demande."
@@ -1195,20 +1197,21 @@ class DBManager:
             offers = user.offres
             if all:
                 offer_to_delete = offers
+            else:
                 for offer in offers:
                     delete = False
                     if type:
-                        delete = offer.type == type
+                        delete = str(offer.type.value) == type
                     
                     if format:
-                        delete = delete and offer.format == format
+                        delete = delete and str(offer.format.value) == format
                     
                     if competence:
-                        delete = delete and offer.competence == competence
+                        delete = delete and offer.competence.lower() == competence.lower()
                         
                     if delete:
                         offer_to_delete.append(offer)
-            
+                
             if not offer_to_delete:
                 result["reason"] = "Pas de d'offres à supprimer, veuillez revoir votre demande."
                 return
@@ -1239,6 +1242,21 @@ class DBManager:
             return session.exec(
                 select(Offre)
                 .where(Offre.statut == OffreStatut.active)
+                .order_by(Offre.created_at.desc())
+            ).all()
+    
+    def get_all_offres(self) -> List[Offre]:
+        """
+        Méthode pour récupérer toutes les offres.
+
+        Returns
+        -------
+        List[Offre]
+            Liste des offres actives triées par date décroissante.
+        """
+        with self.get_session() as session:
+            return session.exec(
+                select(Offre)
                 .order_by(Offre.created_at.desc())
             ).all()
 
@@ -1308,17 +1326,51 @@ class DBManager:
         OffreResponse | None
             La réponse trouvée ou None.
         """
-        user_responses = list(self.get_responses(identifier))
+        with self.get_session() as session:
+            user_responses = session.exec(
+                select(OffreResponse)
+                .where(OffreResponse.answer_id == anwser_id)
+            ).all()
+            
         if not user_responses:
             return None
         
         response = list(
             filter(
-                lambda response_: response_.answer_id == anwser_id and response_.offer_id == offer_id,
+                lambda response_: response_.answer_id == anwser_id and response_.offre_id == offer_id,
                 user_responses
             )
         )
         return response[0] if response else None
+    
+    def remove_response(self, response_id: int) -> Dict[str, Any]:
+        """
+        Méthode pour supprimer une réponse à une offre.
+    
+        Parameters
+        ----------
+        response_id : int
+            ID de la réponse à supprimer.
+    
+        Returns
+        -------
+        Dict[str, Any]
+            Dictionnaire avec 'success' (bool) et 'reason' (str si erreur).
+        """
+        result = {"success": False, "reason": None}
+        try:
+            with self.get_session() as session:
+                response = session.get(OffreResponse, response_id)
+                if not response:
+                    result["reason"] = "Réponse introuvable."
+                    return result
+                session.delete(response)
+                session.commit()
+                result["success"] = True
+        except Exception as e:
+            result["reason"] = f"Erreur lors de la suppression : {str(e)}"
+        finally:
+            return result
     
     def accept_reponse(self, reponse_id: int, close_offer: bool = False) -> bool:
         """
@@ -1455,11 +1507,11 @@ class DBManager:
             # +30 pts — filière / niveau
             user = session.get(User, user_id)
             candidat = session.get(User, candidat_id)
-            if user.filiere == candidat.filiere:
+            if user.filiere == candidat.filiere and user.filiere is not None:
                 messages["filiere"] = ["Même filière que vous"]
                 score += 20
                 
-            if user.level  == candidat.level:
+            if user.level  == candidat.level and user.level is not None:
                 messages["niveau"] = ["Même niveau que vous"]
                 score += 10
 
@@ -1585,7 +1637,7 @@ class DBManager:
 if __name__ == "__main__":
     import bcrypt
     
-    db = DBManager("sqlite:///./db.db")
+    db = DBManager()
     SQLModel.metadata.drop_all(db.engine)
     SQLModel.metadata.create_all(db.engine)
     
