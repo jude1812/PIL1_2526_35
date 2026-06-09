@@ -1,0 +1,170 @@
+/* ============================================
+   INDEX.CSS - IFRI_MentorLink
+   Variables globales pour TOUS les composants
+   ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* ============================================
+   THÈME SOMBRE (par défaut)
+   ============================================ */
+:root,
+[data-theme="dark"] {
+    /* Backgrounds */
+    --bg-primary: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    
+    /* Glassmorphism */
+    --card-bg: rgba(255, 255, 255, 0.08);
+    --glass: rgba(255, 255, 255, 0.1);
+    --glass-light: rgba(255, 255, 255, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    
+    /* Textes */
+    --text-primary: rgba(255, 255, 255, 0.95);
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    
+    /* Inputs */
+    --input-bg: rgba(255, 255, 255, 0.1);
+    --input-border: rgba(255, 255, 255, 0.2);
+    --input-focus: #8b5cf6;
+    
+    /* Ombres */
+    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+    
+    /* Boutons */
+    --gradient-btn: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    
+    /* Notifications */
+    --success-bg: rgba(16, 185, 129, 0.2);
+    --success-border: #10b981;
+    --error-bg: rgba(239, 68, 68, 0.2);
+    --error-border: #ef4444;
+    --warning-bg: rgba(245, 158, 11, 0.2);
+    --warning-border: #f59e0b;
+}
+
+/* ============================================
+   THÈME CLAIR
+   ============================================ */
+[data-theme="light"] {
+    /* Backgrounds */
+    --bg-primary: linear-gradient(135deg, #e0e7ff 0%, #fbcfe8 50%, #f3e8ff 100%);
+    
+    /* Glassmorphism */
+    --card-bg: rgba(255, 255, 255, 0.6);
+    --glass: rgba(255, 255, 255, 0.7);
+    --glass-light: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.9);
+    
+    /* Textes */
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+    
+    /* Inputs */
+    --input-bg: rgba(255, 255, 255, 0.8);
+    --input-border: rgba(0, 0, 0, 0.1);
+    --input-focus: #6366f1;
+    
+    /* Ombres */
+    --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.12);
+    
+    /* Boutons */
+    --gradient-btn: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    
+    /* Notifications */
+    --success-bg: rgba(16, 185, 129, 0.1);
+    --error-bg: rgba(239, 68, 68, 0.1);
+    --warning-bg: rgba(245, 158, 11, 0.1);
+}
+
+/* ============================================
+   TRANSITIONS
+   ============================================ */
+* {
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.4);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.6);
+}
+
+select, input, textarea, button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--input-border);
+    font-family: inherit;
+}
+
+/* Remettre la flèche sur les select */
+select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+/* Thème sombre - select lisible */
+:root select,
+[data-theme="dark"] select {
+    background-color: rgba(30, 27, 75, 0.9);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+/* Thème clair - flèche sombre */
+[data-theme="light"] select {
+    background-color: rgba(255, 255, 255, 0.8);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+

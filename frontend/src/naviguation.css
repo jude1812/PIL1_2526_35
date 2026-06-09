@@ -1,0 +1,154 @@
+/* ============================================
+   NAVIGUATION.CSS - IFRI_MentorLink
+   ============================================ */
+
+/* Thème sombre (par défaut) */
+:root,
+[data-theme="dark"] {
+    --nav-bg: rgba(30, 27, 75, 0.95);
+    --nav-text: rgba(255, 255, 255, 0.7);
+    --nav-text-hover: white;
+    --nav-border: rgba(255, 255, 255, 0.1);
+    --nav-hover-bg: rgba(255, 255, 255, 0.1);
+}
+
+/* Thème clair */
+[data-theme="light"] {
+    --nav-bg: rgba(224, 231, 255, 0.95);
+    --nav-text: #4b5563;
+    --nav-text-hover: #1f2937;
+    --nav-border: rgba(0, 0, 0, 0.1);
+    --nav-hover-bg: rgba(0, 0, 0, 0.05);
+}
+
+/* Reset pour la nav */
+nav {
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--nav-border);
+    position: relative;
+    z-index: 1000;
+    width: 100%;
+}
+
+/* Menu toggle (mobile) */
+.menu-toggle {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    cursor: pointer;
+    background: transparent;
+}
+
+.menu-icon {
+    font-size: 1.8rem;
+    color: var(--nav-text-hover);
+}
+
+.menu-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--nav-text-hover);
+}
+
+/* Navigation liste - desktop */
+nav ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 8px 20px;
+    gap: 6px;
+    flex-wrap: wrap;
+    background: transparent;
+}
+
+nav ul li a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    text-decoration: none;
+    color: var(--nav-text);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    border-radius: 40px;
+    white-space: nowrap;
+}
+
+/* Icônes */
+.nav-icon {
+    font-size: 1.1rem;
+}
+
+/* Badge */
+.nav-badge {
+    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    color: white;
+    font-size: 0.6rem;
+    padding: 2px 8px;
+    border-radius: 40px;
+    font-weight: 600;
+    margin-left: 6px;
+}
+
+/* Hover */
+nav ul li a:hover {
+    background: var(--nav-hover-bg);
+    color: var(--nav-text-hover);
+    transform: translateY(-1px);
+}
+
+/* Content wrapper */
+.content-wrapper {
+    min-height: calc(100vh - 60px);
+    background: var(--bg-primary, linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%));
+    position: relative;
+    z-index: 1;
+}
+
+/* Responsive mobile */
+@media (max-width: 900px) {
+    .menu-toggle {
+        display: flex;
+        background: var(--nav-bg);
+        backdrop-filter: blur(12px);
+    }
+
+    nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        padding: 10px 0;
+        gap: 5px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: var(--nav-bg);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--nav-border);
+        z-index: 999;
+    }
+
+    nav ul.open {
+        display: flex;
+    }
+
+    nav ul li a {
+        justify-content: flex-start;
+        width: calc(100% - 40px);
+        margin: 0 auto;
+        white-space: normal;
+    }
+
+    .nav-badge {
+        margin-left: auto;
+    }
+}
+
+body.menu-open {
+    overflow: hidden;
+}
