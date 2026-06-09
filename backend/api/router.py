@@ -1011,7 +1011,7 @@ async def _all_users(request: Request):
 
 @router.get("/users/search")
 @limiter.limit(f"{LIMITE}/minute")
-async def _search_users(request: Request, email: str = None, phone: str = None):
+async def _search_users(request: Request, email: str = None, phone: str = None, user_id: int = None):
     """
     Endpoint pour récupérer tous les utilisateurs (sans les mots de passe).
 
@@ -1025,15 +1025,19 @@ async def _search_users(request: Request, email: str = None, phone: str = None):
     dict
         Dictionnaire contenant la liste des users.
     """
-    identifier = email or phone
-    if not identifier:
-        raise HTTPException(
-            status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            detail="IDENTIFIER NOT AVAILABLE"
-        )
-        
+    
     db_manager = get_db_manager()
-    user = db_manager.get_user_by_email_or_phone(identifier)
+    if user_id:
+        user =  db_manager.get_user_by_id(int(user_id))
+    else:
+        identifier = email or phone
+        if not identifier:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="IDENTIFIER NOT AVAILABLE"
+            )
+        
+        user = db_manager.get_user_by_email_or_phone(identifier)
     return {
         "user": db_manager.to_dict(user, exclude=["passphrase_hash", "password_hash"]) if user else {}
     }
@@ -1261,6 +1265,9 @@ async def _users_me(request: Request, data: GlobalData):
         raise
     
     except Exception as e:
+        # print(e)
+        # import traceback
+        # traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Erreur interne: {str(e)}"
@@ -1824,15 +1831,16 @@ async def _get_user_messages(request: Request, data: GetMessageData):
         Dictionnaire contenant la liste des messages.
     """
     try:
+        print(data)
         db_manager = get_db_manager()
         data_copy = data.copy()
         data_copy.email = data.sender_email
-        data.phone = data.sender_phone
+        data_copy.phone = data.sender_phone
         identifier, user = _verify_token_and_user(data_copy, db_manager, checkpassword=False)  
         
         data_copy = data.copy()
         data_copy.email = data.receiver_email
-        data.phone = data.receiver_phone
+        data_copy.phone = data.receiver_phone
         receiver_identifier, receiver = _verify_token_and_user(data_copy, db_manager, checkpassword=False)  
         messages = db_manager.get_conversation(identifier, receiver_identifier)
         messages = [db_manager.to_dict(message) for message in messages] if messages else []
@@ -1869,12 +1877,12 @@ async def _get_user_message_unread_count(request: Request, data: GetMessageData)
         db_manager = get_db_manager()
         data_copy = data.copy()
         data_copy.email = data.sender_email
-        data.phone = data.sender_phone
+        data_copy.phone = data.sender_phone
         identifier, user = _verify_token_and_user(data_copy, db_manager)  
         
         data_copy = data.copy()
         data_copy.email = data.receiver_email
-        data.phone = data.receiver_phone
+        data_copy.phone = data.receiver_phone
         receiver_identifier, receiver = _verify_token_and_user(data_copy, db_manager, checkpassword=False)  
         count = db_manager.get_unread_count_from(identifier, receiver_identifier)
         return {
@@ -1907,15 +1915,16 @@ async def _make_user_message_read(request: Request, data: GetMessageData):
         Dictionnaire contenant success et le nouveau count.
     """
     try:
+        print(data)
         db_manager = get_db_manager()
         data_copy = data.copy()
         data_copy.email = data.sender_email
-        data.phone = data.sender_phone
+        data_copy.phone = data.sender_phone
         identifier, user = _verify_token_and_user(data_copy, db_manager, checkpassword=False)  
         
         data_copy = data.copy()
         data_copy.email = data.receiver_email
-        data.phone = data.receiver_phone
+        data_copy.phone = data.receiver_phone
         receiver_identifier, receiver = _verify_token_and_user(data_copy, db_manager, checkpassword=False)  
         make_read_success = db_manager.mark_conversation_read(identifier, receiver_identifier)
         count = db_manager.get_unread_count_from(identifier, receiver_identifier)
@@ -2011,11 +2020,11 @@ async def _ws_user(ws: WebSocket, username: str, user_session_id: str):
     db_manager = get_db_manager()
     # username est gérer par le frontend, pour nom = XX, prenom = ss ee, username = XX_ss_ee
     try:
-        # if not user_session_id in CONNECTED_USERS:
-        #     raise WebSocketException(
-        #         code=status.WS_1008_POLICY_VIOLATION,
-        #         reason="USER_SESSION_ID NOT REGISTER"
-        #     )
+        if not user_session_id in CONNECTED_USERS:
+            raise WebSocketException(
+                code=status.WS_1008_POLICY_VIOLATION,
+                reason="USER_SESSION_ID NOT REGISTER"
+            )
         await ws.accept()
         ws_manager.connect(ws, username)
         while True:
