@@ -1,0 +1,398 @@
+/* ============================================
+   CANDIDAT MODAL - IFRI_MentorLink
+   ============================================ */
+
+/* Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    animation: fadeIn 0.25s ease;
+}
+
+/* Contenu */
+.modal-content {
+    position: relative;
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 32px;
+    width: 90%;
+    max-width: 550px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: slideUp 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Scrollbar */
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: var(--glass);
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: var(--input-focus);
+    border-radius: 10px;
+}
+
+/* Bouton fermeture */
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    transition: all 0.25s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close:hover {
+    background: #ef4444;
+    transform: rotate(90deg);
+    border-color: #ef4444;
+}
+
+/* Header */
+.modal-header {
+    text-align: center;
+    padding: 35px 25px 25px;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(236, 72, 153, 0.25));
+    border-radius: 32px 32px 0 0;
+}
+
+.modal-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--input-focus);
+    margin-bottom: 18px;
+    background: var(--glass);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header h2 {
+    margin: 0 0 10px 0;
+    color: var(--text-primary);
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.modal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(139, 92, 246, 0.2);
+    padding: 6px 16px;
+    border-radius: 40px;
+    font-size: 0.85rem;
+    color: var(--input-focus);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    margin-top: 5px;
+}
+
+/* Body */
+.modal-body {
+    padding: 25px 30px;
+}
+
+/* Infos de base */
+.modal-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--glass-border);
+    transition: all 0.2s;
+}
+
+.info-row:hover {
+    background: var(--glass);
+    padding-left: 12px;
+    border-radius: 12px;
+    border-bottom-color: transparent;
+}
+
+.info-icon {
+    font-size: 1.2rem;
+    min-width: 36px;
+    text-align: center;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    min-width: 100px;
+    font-size: 0.9rem;
+}
+
+.info-value {
+    color: var(--text-secondary);
+    flex: 1;
+    word-break: break-word;
+    font-size: 0.9rem;
+}
+
+/* Sections (compétences / dispos) */
+.modal-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.section-header h4 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.section-toggle {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 40px;
+    padding: 3px 12px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    transition: all 0.2s;
+}
+
+.section-toggle:hover {
+    background: var(--input-focus);
+    color: white;
+}
+
+/* Compétences */
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.skill-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--glass);
+    border-radius: 40px;
+    padding: 5px 12px;
+    font-size: 0.8rem;
+}
+
+.skill-name {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.skill-level {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 40px;
+}
+
+.skill-level.fort {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.skill-level.faible {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+}
+
+/* Disponibilités */
+.dispos-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.dispo-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--glass);
+    border-radius: 40px;
+    padding: 5px 12px;
+    font-size: 0.8rem;
+}
+
+.dispo-day {
+    color: var(--text-primary);
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.dispo-time {
+    color: var(--input-focus);
+    font-size: 0.75rem;
+}
+
+.empty-section {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-style: italic;
+    padding: 8px 0;
+}
+
+/* Footer */
+.modal-footer {
+    display: flex;
+    gap: 15px;
+    padding: 20px 30px 30px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.modal-btn-message {
+    flex: 2;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    border: none;
+    border-radius: 40px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.modal-btn-message:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+}
+
+.modal-btn-close {
+    flex: 1;
+    padding: 12px 20px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 40px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 0.95rem;
+}
+
+.modal-btn-close:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .modal-content {
+        width: 95%;
+        max-width: 95%;
+        max-height: 90vh;
+        border-radius: 24px;
+    }
+
+    .modal-header {
+        padding: 25px 20px 20px;
+    }
+
+    .modal-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .info-row {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .info-label {
+        min-width: 80px;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+        gap: 12px;
+        padding: 20px;
+    }
+
+    .modal-btn-message,
+    .modal-btn-close {
+        width: 100%;
+    }
+
+    .modal-close {
+        top: 12px;
+        right: 16px;
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+    }
+
+    .skills-list, .dispos-list {
+        justify-content: center;
+    }
+}
