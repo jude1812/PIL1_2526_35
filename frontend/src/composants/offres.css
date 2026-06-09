@@ -1,0 +1,425 @@
+/* ============================================
+   OFFERS.CSS - IFRI_MentorLink
+   Style moderne glassmorphism
+   ============================================ */
+
+.offers-container {
+    min-height: 100vh;
+    background: var(--bg-primary);
+    padding: 20px;
+}
+
+.offers-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 15px 25px;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+}
+
+.offers-title {
+    color: var(--text-primary);
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.offers-add-btn {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--input-focus), #ec4899);
+    border: none;
+    border-radius: 40px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.offers-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+}
+
+/* Formulaire de création */
+.offers-form-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.offers-form-card h3 {
+    color: var(--text-primary);
+    margin: 0 0 20px 0;
+    font-size: 1.2rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.form-input, .form-select, .form-textarea {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.form-textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+.form-submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none;
+    border-radius: 40px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 10px;
+}
+
+.form-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+}
+
+.form-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Contenu principal */
+.offers-content {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 25px;
+}
+
+/* Filtres */
+.offers-filters {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 20px;
+    height: fit-content;
+}
+
+.offers-filters h3 {
+    color: var(--text-primary);
+    margin: 0 0 20px 0;
+    font-size: 1.1rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.filter-group {
+    margin-bottom: 18px;
+}
+
+.filter-group label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.filter-input, .filter-select {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    padding: 8px 12px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.filter-input:focus, .filter-select:focus {
+    outline: none;
+    border-color: var(--input-focus);
+}
+
+.filter-results {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* Liste des offres */
+.offers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.offers-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.offers-list::-webkit-scrollbar-track {
+    background: var(--glass);
+    border-radius: 10px;
+}
+
+.offers-list::-webkit-scrollbar-thumb {
+    background: var(--input-focus);
+    border-radius: 10px;
+}
+
+.offer-item {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 18px;
+    transition: all 0.2s;
+}
+
+.offer-item:hover {
+    transform: translateX(5px);
+    border-color: var(--input-focus);
+}
+
+.offer-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+.offer-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.badge-type {
+    padding: 4px 12px;
+    border-radius: 40px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.badge-type.offre {
+    background: rgba(139, 92, 246, 0.2);
+    color: var(--input-focus);
+}
+
+.badge-type.demande {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+}
+
+.badge-status {
+    padding: 4px 12px;
+    border-radius: 40px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.badge-status.active {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.badge-status.clotured {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.badge-format {
+    padding: 4px 12px;
+    border-radius: 40px;
+    font-size: 0.7rem;
+    background: var(--glass);
+    color: var(--text-secondary);
+}
+
+.offer-user {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.user-filiere {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+}
+
+.offer-item-competence {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.offer-item-competence strong {
+    font-weight: 600;
+}
+
+.offer-item-description {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin: 8px 0;
+    padding: 8px 0;
+    border-top: 1px solid var(--glass-border);
+}
+
+.offer-item-footer {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.offer-respond-btn {
+    padding: 8px 20px;
+    background: linear-gradient(135deg, var(--input-focus), #ec4899);
+    border: none;
+    border-radius: 40px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.offer-respond-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+}
+
+.offer-delete-btn {
+    padding: 8px 20px;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 40px;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.offer-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.3);
+    transform: scale(1.02);
+}
+
+.offers-empty {
+    text-align: center;
+    padding: 50px;
+    color: var(--text-secondary);
+    background: var(--card-bg);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+}
+
+.offers-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .offers-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .offers-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .offer-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .offer-user {
+        text-align: left;
+    }
+}
+
+@media (max-width: 600px) {
+    .offers-container {
+        padding: 15px;
+    }
+    
+    .offers-form-card {
+        padding: 20px;
+    }
+    
+    .offers-filters {
+        padding: 15px;
+    }
+    
+    .offer-item {
+        padding: 14px;
+    }
+    
+    .offer-respond-btn, .offer-delete-btn {
+        width: 100%;
+        text-align: center;
+    }
+}

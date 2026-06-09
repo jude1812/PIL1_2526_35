@@ -1,0 +1,612 @@
+/* ============================================
+   PROFILE_ME.CSS - IFRI_MentorLink
+   Style pour la page profil utilisateur
+   ============================================ */
+
+/* Container principal */
+#profile-root {
+    min-height: 100vh;
+    background: var(--bg-primary);
+    padding: 20px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Non connecté */
+.notConnected {
+    text-align: center;
+    padding: 50px;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+}
+
+.notConnected a {
+    color: var(--input-focus);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Container principal du profil */
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Loading */
+.profile-loading {
+    text-align: center;
+    padding: 50px;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+}
+
+/* ============================================
+   En-tête du profil (UserComponent)
+   ============================================ */
+.profile-header-section {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 25px 30px;
+    margin-bottom: 30px;
+}
+
+.user-component {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* ============================================
+   PHOTO DE PROFIL - ÉDITION INLINE
+   ============================================ */
+
+/* Avatar */
+.user-avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--input-focus);
+    background: var(--glass);
+}
+
+.btn-edit-avatar {
+    padding: 6px 16px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.btn-edit-avatar:hover {
+    background: var(--input-focus);
+    color: white;
+}
+
+/* Mode édition */
+.edit-avatar-inline {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+
+.avatar-file-input {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    padding: 8px 12px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    width: 100%;
+}
+
+.avatar-file-input::-webkit-file-upload-button {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    margin-right: 10px;
+}
+
+.avatar-file-input::-webkit-file-upload-button:hover {
+    background: var(--input-focus);
+    color: white;
+}
+
+.edit-avatar-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.edit-avatar-actions button {
+    padding: 4px 12px;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.btn-avatar-confirm {
+    background: #10b981;
+    color: white;
+}
+
+.btn-avatar-confirm:hover {
+    background: #059669;
+    transform: scale(1.02);
+}
+
+.btn-avatar-cancel {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-avatar-cancel:hover {
+    background: rgba(239, 68, 68, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .user-avatar {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .edit-avatar-inline {
+        width: 100%;
+    }
+    
+    .avatar-file-input {
+        font-size: 0.75rem;
+        padding: 6px 8px;
+    }
+}
+/* Infos utilisateur */
+.user-info-section {
+    flex: 1;
+}
+
+.user-fullname {
+    font-size: 1.8rem;
+    margin: 0 0 20px 0;
+    color: var(--text-primary);
+}
+
+.user-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.detail-item {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    min-width: 70px;
+}
+
+/* Édition inline */
+.display-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.display-inline span {
+    color: var(--text-primary);
+    word-break: break-word;
+}
+
+.display-inline button,
+.edit-inline button {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: all 0.2s;
+    color: var(--text-secondary);
+}
+
+.display-inline button:hover,
+.edit-inline button:hover {
+    background: var(--input-focus);
+    color: white;
+}
+
+.edit-inline {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.edit-inline input,
+.edit-inline select,
+.edit-inline textarea {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+}
+
+.edit-inline input:focus,
+.edit-inline select:focus,
+.edit-inline textarea:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}
+
+.edit-inline textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* Section header avec bouton ajouter */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.section-header h4 {
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.btn-add {
+    background: var(--input-focus);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 4px 12px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.btn-add:hover {
+    transform: scale(1.02);
+    opacity: 0.9;
+}
+
+/* Formulaire d'ajout */
+.add-form {
+    background: var(--glass);
+    border-radius: 16px;
+    padding: 12px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.add-input, .add-select {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    flex: 1;
+    min-width: 120px;
+}
+
+.add-input:focus, .add-select:focus {
+    outline: none;
+    border-color: var(--input-focus);
+}
+
+.btn-confirm {
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.btn-confirm:hover {
+    background: #059669;
+}
+
+/* Bouton supprimer sur les items */
+.btn-delete-item {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: all 0.2s;
+    color: #ef4444;
+    margin-left: auto;
+}
+
+.btn-delete-item:hover {
+    background: rgba(239, 68, 68, 0.4);
+    transform: scale(1.02);
+}
+
+/* Compétences */
+.user-skills-section {
+    margin-bottom: 20px;
+}
+
+.user-skills-section h4,
+.user-dispos-section h4 {
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.skill-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: var(--glass);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.skill-competence {
+    font-weight: 600;
+    color: var(--text-primary);
+    min-width: 100px;
+}
+
+.skill-type {
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.skill-type.fort {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.skill-type.faible {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+}
+
+.skill-date {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+/* Disponibilités */
+.user-dispos-section {
+    margin-top: 10px;
+}
+
+.dispo-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: var(--glass);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.dispo-jour {
+    font-weight: 600;
+    color: var(--text-primary);
+    min-width: 100px;
+    text-transform: capitalize;
+}
+
+.dispo-heure {
+    color: var(--input-focus);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.dispo-date {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+/* Pas de données */
+.no-data {
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 10px;
+    text-align: center;
+    background: var(--glass);
+    border-radius: 12px;
+}
+
+/* Actions du profil */
+.profile-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--glass-border);
+    justify-content: flex-end;
+}
+
+.btn-logout {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-logout:hover {
+    transform: translateY(-2px);
+    background: rgba(239, 68, 68, 0.3);
+}
+
+.btn-passphrase {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.btn-passphrase:hover {
+    transform: translateY(-2px);
+    background: rgba(16, 185, 129, 0.3);
+}
+/* Responsive */
+@media (max-width: 768px) {
+    #profile-root {
+        padding: 10px;
+    }
+    
+    .profile-header-section {
+        padding: 20px;
+    }
+    
+    .user-component {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .user-fullname {
+        text-align: center;
+    }
+    
+    .user-details-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+    
+    .display-inline {
+        justify-content: flex-start;
+    }
+    
+    .profile-actions {
+        justify-content: center;
+    }
+    
+    .skill-item, .dispo-item {
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .btn-delete-item {
+        margin-left: 0;
+    }
+    
+    .add-form {
+        flex-direction: column;
+    }
+    
+    .add-input, .add-select {
+        width: 100%;
+    }
+    
+    .btn-confirm {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-avatar {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .user-fullname {
+        font-size: 1.4rem;
+    }
+    
+    .edit-inline input,
+    .edit-inline select,
+    .edit-inline textarea {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+    
+    .display-inline button,
+    .edit-inline button {
+        padding: 3px 8px;
+        font-size: 0.65rem;
+    }
+}
+
+/* Scrollbar personnalisée */
+.user-skills-section::-webkit-scrollbar,
+.user-dispos-section::-webkit-scrollbar {
+    width: 6px;
+}
+
+.user-skills-section::-webkit-scrollbar-track,
+.user-dispos-section::-webkit-scrollbar-track {
+    background: var(--glass);
+    border-radius: 10px;
+}
+
+.user-skills-section::-webkit-scrollbar-thumb,
+.user-dispos-section::-webkit-scrollbar-thumb {
+    background: var(--input-focus);
+    border-radius: 10px;
+}

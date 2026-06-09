@@ -1,0 +1,394 @@
+/* ============================================
+   RESET.CSS - IFRI_MentorLink
+   Responsive - Mobile First
+   ============================================ */
+
+.reset-container {
+    min-height: 100vh;
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.reset-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    transition: all 0.3s ease;
+}
+
+.reset-title {
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* ============================================
+   MODE SELECTOR
+   ============================================ */
+.reset-mode-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.reset-mode-selector button {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px 15px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 40px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.reset-mode-selector button:hover {
+    background: rgba(139, 92, 246, 0.2);
+    color: var(--text-primary);
+}
+
+.reset-mode-selector button.active {
+    background: var(--input-focus);
+    color: white;
+    border-color: var(--input-focus);
+}
+
+/* ============================================
+   FORMULAIRE
+   ============================================ */
+.reset-form {
+    margin-top: 10px;
+}
+
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.reset-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--input-bg);
+    border: 2px solid var(--input-border);
+    border-radius: 14px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.reset-input:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.reset-input::placeholder {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* Boutons */
+.reset-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    border: none;
+    border-radius: 40px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 10px;
+    font-size: 1rem;
+}
+
+.reset-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+}
+
+.reset-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.reset-btn-small {
+    width: 100%;
+    padding: 10px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 40px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+}
+
+.reset-btn-small:hover:not(:disabled) {
+    background: rgba(139, 92, 246, 0.2);
+    color: var(--text-primary);
+}
+
+/* Message d'erreur */
+.reset-error {
+    background: rgba(239, 68, 68, 0.15);
+    backdrop-filter: blur(4px);
+    padding: 12px 15px;
+    border-radius: 14px;
+    color: #ef4444;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 0.85rem;
+    border-left: 3px solid #ef4444;
+}
+
+/* Question secrète */
+.reset-question {
+    background: rgba(139, 92, 246, 0.12);
+    backdrop-filter: blur(4px);
+    padding: 14px 16px;
+    border-radius: 14px;
+    margin-bottom: 18px;
+    text-align: left;
+    border-left: 4px solid var(--input-focus);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.reset-question strong {
+    color: var(--input-focus);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Message de succès */
+.reset-success {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.success-icon {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+}
+
+.reset-success h2 {
+    color: #10b981;
+    margin: 10px 0;
+    font-size: 1.3rem;
+}
+
+.reset-success p {
+    color: var(--text-secondary);
+    margin: 10px 0;
+    font-size: 0.9rem;
+}
+
+.reset-success a {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 25px;
+    background: var(--input-focus);
+    border-radius: 40px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.reset-success a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+}
+
+/* Footer */
+.reset-footer {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid var(--glass-border);
+    text-align: center;
+}
+
+.reset-footer a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+}
+
+.reset-footer a:hover {
+    color: var(--input-focus);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Tablette */
+@media (max-width: 600px) {
+    .reset-card {
+        padding: 20px;
+        max-width: 100%;
+    }
+
+    .reset-title {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+
+    .reset-mode-selector {
+        gap: 8px;
+    }
+
+    .reset-mode-selector button {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        min-width: 80px;
+    }
+
+    .reset-input {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+    }
+
+    .reset-btn {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+
+    .reset-question {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .reset-container {
+        padding: 15px;
+    }
+
+    .reset-card {
+        padding: 18px;
+        border-radius: 20px;
+    }
+
+    .reset-title {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    .reset-mode-selector {
+        gap: 6px;
+        margin-bottom: 20px;
+    }
+
+    .reset-mode-selector button {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+        min-width: 70px;
+    }
+
+    .input-group {
+        margin-bottom: 14px;
+    }
+
+    .input-group label {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+    }
+
+    .reset-input {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+        border-radius: 12px;
+    }
+
+    .reset-input::placeholder {
+        font-size: 0.8rem;
+    }
+
+    .reset-btn {
+        padding: 11px;
+        font-size: 0.9rem;
+    }
+
+    .reset-btn-small {
+        padding: 8px;
+        font-size: 0.8rem;
+    }
+
+    .reset-error {
+        padding: 10px 12px;
+        font-size: 0.8rem;
+    }
+
+    .reset-question {
+        padding: 10px 12px;
+        font-size: 0.8rem;
+    }
+
+    .reset-success h2 {
+        font-size: 1.1rem;
+    }
+
+    .success-icon {
+        font-size: 2.5rem;
+    }
+
+    .reset-footer {
+        margin-top: 20px;
+        padding-top: 15px;
+    }
+}
+
+/* Petit mobile (<= 380px) */
+@media (max-width: 380px) {
+    .reset-card {
+        padding: 15px;
+    }
+
+    .reset-mode-selector button {
+        padding: 6px 8px;
+        font-size: 0.7rem;
+        min-width: 60px;
+    }
+
+    .reset-title {
+        font-size: 1.1rem;
+    }
+
+    .reset-input {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
+
+    .reset-btn {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+}
