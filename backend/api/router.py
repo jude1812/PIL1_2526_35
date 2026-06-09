@@ -746,23 +746,19 @@ async def _upload_ws_file(
         500 en cas d'erreur interne.
     """
     try:
-        print("Upload file : ", json_data)
         json_data = json.loads(json_data)
-        print("Upload file loaded : ", json_data)
         if all(c in json_data for c in ("from", "to", "sender_id", "receiver_id")):
             tasks = [
                 asyncio.create_task(handle_one_file(file=file, dirname=WS_UPLOAD_DIR))
                 for file in files
             ]
             results = list(await asyncio.gather(*tasks))
-            print("results : ", results)
             msg = ""
             for i, result in enumerate(results):    
                 msg += result[0] + "#__#" + result[1] 
                 if (i != len(results) -1):
                     msg += "####_####"
             
-            print("msg", msg)
             ws_manager = get_ws_manager()
             await ws_manager.send_message(
                 who=json_data["from"],
@@ -1115,8 +1111,6 @@ async def _add_dispo(request: Request, data: AddDispoData):
     try:
         db_manager = get_db_manager()
         identifier, user = _verify_token_and_user(data, db_manager)
-        # print(user, identifier)
-        # input()
         dispo = Disponibilite(
             heure_debut=data.heure_debut,
             heure_fin=data.heure_fin,
@@ -1265,9 +1259,6 @@ async def _users_me(request: Request, data: GlobalData):
         raise
     
     except Exception as e:
-        # print(e)
-        # import traceback
-        # traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Erreur interne: {str(e)}"
@@ -1831,7 +1822,6 @@ async def _get_user_messages(request: Request, data: GetMessageData):
         Dictionnaire contenant la liste des messages.
     """
     try:
-        print(data)
         db_manager = get_db_manager()
         data_copy = data.copy()
         data_copy.email = data.sender_email
@@ -1915,7 +1905,6 @@ async def _make_user_message_read(request: Request, data: GetMessageData):
         Dictionnaire contenant success et le nouveau count.
     """
     try:
-        print(data)
         db_manager = get_db_manager()
         data_copy = data.copy()
         data_copy.email = data.sender_email
