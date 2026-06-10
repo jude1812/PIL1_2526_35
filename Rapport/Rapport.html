@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport de Projet - IFRI_MentorLink</title>
+    <link rel="stylesheet" href="rapport.css">
+</head>
+<body>
+
+    <header>
+        <h1>Projet Intégrateur : IFRI_MentorLink</h1>
+        <h2>Rapport Technique Final</h2>
+        <p class="Groupe-35">Dépôt : PIL1_2526_35</p>
+    </header>
+
+    <main>
+        
+        <section id="identification">
+            <h3>1. Identification du Groupe et des Membres</h3>
+            <p><strong>Nom du Groupe :</strong> Groupe 35</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom & Prénoms</th>
+                        <th>Filière / Spécialité</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>HOUNSOU Samuel </td>
+                        <td> SI </td>
+                    </tr>
+                    <tr>
+                        <td> LOKONON Yaniss </td>
+                        <td> GL </td>
+                    </tr>
+                    <tr>
+                        <td> DJOMAMOU Loth </td>
+                        <td> IA </td>
+                    </tr>
+                    <tr>
+                        <td> KOUKOU Félicité Reine  </td>
+                        <td> GL </td>
+                    </tr>
+                    <tr>
+                        <td> ASHANTI Zinedine </td>
+                        <td> SI </td>
+                    </tr>
+                    <tr>
+                        <td> LOKONON Emerick </td>
+                        <td> IM </td>
+                    </tr>
+                    <tr>
+                        <td> GBAGUIDI Jude </td>
+                        <td> SEIOT </td>
+                    </tr>
+                    </tbody>
+            </table>
+        </section>
+
+        <section id="fonctionnement">
+       <h4>2.1. Répartition des Rôles</h4>
+            <p>Afin de maximiser l'efficacité de l'équipe durant le temps imparti, nous avons partagé les responsabilités selon les forces de chacun :</p>
+            <ul>
+                <li><strong>HOUNSOU Samuel (SI) :</strong> Lead Backend Developer. Responsable de l'architecture principale de l'API avec FastAPI, de la configuration globale, de l'accès aux données et de la centralisation du code serveur.</li>
+                <li><strong>DJOMAMOU Loth (IA) :</strong> Responsable de la conception page d'explication de l'algorithme de matching,et du codage pour la limite du nombre de requêtes par minute concernant la base de données.</li>
+                <li><strong>GBAGUIDI Jude (SEIOT) :</strong> Responsable de la base de données, de la gestion du dépôt GitHub et aide à la production du rapport.</li>
+                <li><strong>LOKONON Yaniss (GL):</strong> Responsable du rapport et de la supervision du projet.</li>
+                <li><strong>KOUKOU Félicité Reine(GL):</strong> Responsable du développement des interfaces utilisateurs en React, de la gestion du thème dynamique et de l'intégration du design responsive.</li>
+                <li><strong>ASHANTI Zinedine(SI) et LOKONON Emerick( IM ) :</strong> Équipe Frontend et Intégration. Responsables du développement des interfaces utilisateurs en React, de la gestion du thème dynamique et de l'intégration du design responsive.</li>
+            </ul>
+            
+            <h4>2.2. Contribution de chacun</h4>
+            <p>Chaque membre a fourni un travail authentique et vérifiable à travers les validations régulières effectuées sur notre plateforme de versionnage :</p>
+            <ul>
+                <li><strong>Samuel:</strong> A conçu le script de lancement principal <code>main_api.py</code>, configuré l'ORM <code>SQLModel</code> et a écrit l'algorithme Python capable de croiser de manière asynchrone les compétences fortes/faibles, les filières ainsi que l'inclusion des plages horaires pour retourner un score de pertinence.</li>
+                <li><strong>Loth :</strong> A aidé à écrire l'algorithme Python capable de croiser de manière asynchrone les compétences fortes/faibles, les filières ainsi que l'inclusion des plages horaires pour retourner un score de pertinence, puis a conçu la  page d'explication de l'algorithme de matching .</li>
+                <li><strong>Jude :</strong> A conçu la base de données, géré le dépôt GitHub.</li>
+                <li><strong>Yaniss:</strong> A supervisé le projet et a participé à la conception du rapport.</li>
+                <li><strong> Félicité, Zinedine et Emerick:</strong> Ont conçu les maquettes de l'interface utilisateur , connecté le Frontend React aux endpoints d'affichage et géré le basculement dynamique du mode clair au mode sombre.</li>
+            </ul>
+            
+            <h4>2.3. Démarche et Outils de Collaboration</h4>
+            <p>Pour assurer la synchronisation et éviter les conflits de code, nous avons adopté une méthodologie agile structurée autour de trois outils principaux :</p>
+            <ul>
+                <li><strong>Trello :</strong> Utilisation d'un tableau Kanban pour découper le cahier des charges en tâches élémentaires (À faire, En cours, En cours de revue, Terminé), permettant un suivi rigoureux de l'état d'avancement des modules.</li>
+                <li><strong>Git & GitHub :</strong> Hébergement du code source sur notre dépôt distant. Utilisation de branches thématiques pour chaque module indépendant avec des revues de code obligatoires avant toute fusion sur la branche principale <code>main</code>.</li>
+                <li><strong>Réunions d'équipe :</strong> Un point technique synchrone a été réalisé régulièrement pour identifier immédiatement les blocages liés à la communication client-serveur ou à l'intégration.</li>
+            </ul>
+        </section>
+
+        <section id="conception">
+            <h3>3. Description de la Conception Technique</h3>
+            
+            <h4>3.1. Structure Générale du Projet</h4>
+            <p>L'application adopte une conception modulaire et extensible, respectant une architecture de type Client-Serveur. Le serveur Backend est propulsé par le framework performant <strong>FastAPI (Python 3.11)</strong>, tandis que l'interface s'appuie sur une esthétique moderne en <strong>Glassmorphism</strong> développée en <strong>React</strong>. Voici l'organisation réelle de l'arborescence de notre projet :</p>
+            
+<pre><code>├── backend/
+│   ├── api/          # Routes FastAPI, WebSocket, config (main_api.py)
+│   ├── core/         # DBManager, WSManager, modèles SQLModel
+│   └── utils/        # JWT, bcrypt, rate limiting
+├── frontend/
+│   ├── src/          # Code source React
+│   └── build/        # Build production (servi directement par FastAPI)
+├── livraux/
+│   ├── structure.sql  # La structure relationnelle de la base de données
+│   ├── appercu_db_test.sql  # Aperçu de la base avec utilisateurs de test
+│   └── rapport.html  # Le rapport technique final
+├── requirements_unix.txt
+├── requirements_windows.txt
+├── run.sh
+├── run.bat
+└── INSTRUCTIONS.md
+└── README.md</code></pre>
+            
+            <h4>3.2. Conception de la Base de Données</h4>
+            <p>Notre persistance des données s'appuie sur <strong>SQLite</strong> (gérée via <strong>SQLModel</strong> pour des raisons de simplicité et d'intégration native sans configuration externe lourde). L'architecture de stockage est matérialisée par les tables interconnectées définies dans <code>structure.sql</code> :</p>
+            <ul>
+                <li><strong>users :</strong> Table centrale stockant les informations d'identification (nom, prenom, filiere, level, bio, img_path). L'unicité stricte est assurée par des index uniques sur les colonnes <code>email</code> et <code>phone</code> (limité à 10 caractères). Les mots de passe et phrases secrètes y sont sauvegardés sous forme hachée via l'algorithme sécurisé <code>bcrypt</code>.</li>
+                <li><strong>user_skills :</strong> Gère l'association des compétences et matières pour chaque utilisateur, en distinguant le type de compétence (matières maîtrisées vs lacunes/besoins d'aide).</li>
+                <li><strong>disponibilite :</strong> Enregistre les créneaux hebdomadaires des étudiants (jour de la semaine, heure de début et de fin au format standardisé 24h HH:MM).</li>
+                <li><strong>offre :</strong> Répertorie les publications de mentorat en spécifiant la compétence ciblée, le type (offre/demande), le format (présentiel, en ligne, les deux) et le statut (actif/inactif).</li>
+                <li><strong>messages :</strong> Enregistre l'historique complet de la messagerie instantanée (expéditeur, destinataire, contenu textuel, indicateur de lecture <code>read</code> et horodatage).</li>
+                <li><strong>offre_response :</strong> Suit les interactions et les réponses formulées par les utilisateurs vis-à-vis d'une offre ou demande existante.</li>
+            </ul>
+            <p><em>Sécurité de l'intégrité :</em> Toutes les relations intègrent la contrainte de clé étrangère <code>FOREIGN KEY ... REFERENCES users(id) ON DELETE CASCADE</code>, garantissant le nettoyage automatique des données associées en cas de suppression d'un compte étudiant.</p>
+            
+            <h4>3.3. Logique de l'Algorithme de Matching</h4>
+            <p>Le cœur de l'application repose sur un système d'évaluation asynchrone qui calcule un score de compatibilité automatique sur un barème strict de <strong>100 points maximum</strong> entre un demandeur et un offreur de mentorat :</p>
+            <ul>
+                <li><strong>Compatibilité des compétences / matières (Max 40 points) :</strong> L'algorithme croise la table <code>user_skills</code>. Il attribue 10 points par compétence faible (lacune) d'un étudiant qui correspond à une compétence forte (matière maîtrisée) d'un autre utilisateur.</li>
+                <li><strong>Proximité des filières et niveaux d'études (Max 30 points) :</strong> Un bonus de 20 points est octroyé si les deux étudiants appartiennent à la même filière d'études à l'IFRI. Un bonus supplémentaire de 10 points est ajouté s'ils partagent exactement le même niveau d'études (ex : Licence 1).</li>
+                <li><strong>Compatibilité des plages horaires (Max 30 points) :</strong> L'algorithme analyse les enregistrements de la table <code>disponibilite</code>. Il accorde 10 points par journée de la semaine où les disponibilités coïncident, à condition que la plage horaire définie par le mentor englobe le besoin horaire exprimé par le mentoré.</li>
+            </ul>
+        </section>
+
+        <section id="deploiement">
+            <h3>4. Instructions de Déploiement</h3>
+            <p>Pour faciliter l'évaluation par le jury, le déploiement, la création de l'environnement virtuel et l'installation des paquets ont été entièrement automatisés via des scripts d'initialisation :</p>
+            <ol>
+                <li><strong>Prérequis :</strong> Disposer de Python 3.11 installé sur votre machine informatique.</li>
+                <li><strong>Clonage ou extraction du projet :</strong> Ouvrez un terminal dans le dossier du projet après extraction ou clonage.</li>
+                <li><strong>Exécution automatisée de l'application :</strong>
+                    <ul>
+                        <li><strong>Sur Windows :</strong> Double-cliquez simplement sur le fichier <code>run.bat</code> à la racine du projet (ou exécutez <code>run.bat</code> dans votre terminal de commande).</li>
+                        <li><strong>Sur Linux / macOS :</strong> Ouvrez votre terminal et lancez la commande suivante : <pre><code>chmod +x run.sh && ./run.sh</code></pre></li>
+                    </ul>
+                </li>
+                <li><strong>Accès à l'interface :</strong> Une fois le script lancé avec succès, ouvrez votre navigateur web et accédez à l'adresse locale : <code>http://localhost:9000</code>. La documentation interactive complète de l'API reste accessible à tout moment pour les tests sur <code>http://localhost:9000/api/docs</code>.</li>
+            </ol>
+        </section>
+
+        <section id="manuel">
+            <h3>5. Manuel d'Utilisation</h3>
+            
+            <h4>5.1. Authentification, Thème et Profil</h4>
+            <p>L'étudiant accède à une interface moderne en mode sombre (conception Glassmorphism). Il peut s'inscrire en insérant ses données (nom, prenom, filiere, level). Le système impose un numéro de téléphone valide à 10 caractères et vérifie automatiquement l'unicité de l'e-mail et du téléphone. Le mot de passe est immédiatement haché via l'algorithme sécurisé <code>bcrypt</code>. La connexion s'effectue pour obtenir un token de sécurité JWT (valable 3 minutes par défaut). Depuis son tableau de bord, l'utilisateur gère ses matières dans la table <code>user_skills</code> en catégorisant ses saisies en "Matières maîtrisées" ou "Lacunes", configure ses heures de disponibilité, et peut basculer l'affichage entre le mode clair et le mode sombre.</p>
+            
+            <h4>5.2. Publication d'Offres / Demandes</h4>
+            <p>Pour initier une mise en relation, l'étudiant utilise l'interface liée à la table <code>offre</code>. Il remplit un formulaire précisant la compétence ciblée (ex: Algorithmique, SQL), le type d'action (<strong>Offre</strong> s'il propose son aide, ou <strong>Demande</strong> s'il cherche un tuteur), le format de la session (Présentiel, En ligne ou les Deux), et le statut actif de la publication.</p>
+            
+            <h4>5.3. Suggestions et Messagerie Instantanée</h4>
+            <p>Sur sa page d'accueil, le moteur de matching croise automatiquement les données et affiche la liste des profils d'étudiants de l'IFRI compatibles, classés par ordre décroissant selon leur score de pertinence (sur 100 points). Dès qu'une mise en correspondance est acceptée, les deux étudiants peuvent communiquer instantanément. La messagerie utilise une liaison continue par <strong>WebSocket</strong> via l'adresse de routage <code>ws://localhost:9000/api/user/ws/msg</code>, transmettant les messages textuels en temps réel avec un historique complet conservé en base de données pour assurer le suivi.</p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Projet Intégrateur 2025-2026 - Institut de Formation et de Recherche en Informatique (IFRI)</p>
+    </footer>
+
+</body>
+</html>
+
