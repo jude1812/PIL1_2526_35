@@ -61,10 +61,12 @@ Pour plus de détails, voir [INSTRUCTIONS.md](./INSTRUCTIONS.md).
 ├── frontend/
 │   ├── src/          # Code source React
 │   └── build/        # Build production (servi par FastAPI)
-├── livraux/
+├── Livraux/
     ├── structure.sql  # La structure de la base de donnée
     ├── appercu_db_test.sql  # Apperçu de la base de donnée avec des utilisateurs
-    ├── rapport.html  # Le rapport final
+├── Rapport/
+    ├── Rapport.css  # Fichier css du rapport
+    ├── Rapport.html  # Fichier html du rapport
 ├── requirements_unix.txt
 ├── requirements_windows.txt
 ├── run.sh
